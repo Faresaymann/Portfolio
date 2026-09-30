@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fares Ayman | 開発者ポートフォリオ - Backend & Data Analytics</title>
+    
+    <!-- Dynamic Japanese Torii & Sakura Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23C0392B'/><circle cx='50' cy='50' r='40' fill='%23FFFFFF'/><path d='M25 32 H75 V38 H25 Z M30 38 H70 V42 H30 Z M38 42 V70 H46 V42 Z M54 42 V70 H62 V42 Z' fill='%23C0392B'/><circle cx='50' cy='25' r='5' fill='%23D4AC0D'/></svg>">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Noto Serif JP, Zen Kaku Gothic, & Cinzel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Noto+Serif+JP:wght@400;600;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- External Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Tailwind CSS Config Script -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    screens: {
+                        '3xl': '1920px',
+                        '4xl': '2560px',
+                    },
+                    colors: {
+                        skyLight: '#EBF4F6',
+                        skyCloud: '#F7FAFC',
+                        vermilion: '#C0392B',
+                        sunGold: '#D4AC0D',
+                        bambooGreen: '#27AE60',
+                        washiPaper: '#FAFAFA',
+                        slateInk: '#1C2833',
+                        darkNavy: '#0b0f19',
+                        darkCard: '#121826',
+                        softPink: '#FADBD8',
+                        indigoNight: '#2C3E50',
+                    },
+                    fontFamily: {
+                        jpSerif: ['"Noto Serif JP"', 'serif'],
+                        jpSans: ['"Zen Kaku Gothic New"', 'sans-serif'],
+                        cinzel: ['Cinzel', 'serif']
+                    },
+                    backgroundImage: {
+                        'seigaiha': "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='40' viewBox='0 0 80 40'%3E%3Cpath d='M0 40a40 40 0 0 1 40-40 40 40 0 0 1 40 40H70A30 30 0 0 0 40 10 30 30 0 0 0 10 40H0z' fill='%23d0e1e9' fill-opacity='0.25'/%3E%3C/svg%3E\")",
+                        'asanoha': "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M30 0 L60 30 L30 60 L0 30 Z M30 0 L30 60 M0 30 L60 30' stroke='%23C0392B' stroke-opacity='0.08' stroke-width='1' fill='none'/%3E%3C/svg%3E\")"
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-skyLight dark:bg-darkNavy bg-seigaiha text-slateInk dark:text-slate-200 antialiased selection:bg-vermilion selection:text-white relative">
+
+    <!-- Canvas Floating Sakura Blossom Effect -->
+    <canvas id="sakura-canvas"></canvas>
+
+    <!-- Japanese Audio Widget Player -->
+    <div id="audio-widget" class="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-white/95 dark:bg-darkCard/90 backdrop-blur-md border-2 border-vermilion/30 px-4 py-3 rounded-full shadow-2xl transition-all hover:scale-105">
+        <button id="music-toggle-btn" onclick="toggleAudio()" class="w-10 h-10 rounded-full bg-vermilion text-white flex items-center justify-center shadow-lg hover:bg-red-700 transition-colors">
+            <i id="music-icon" class="fas fa-play text-sm"></i>
+        </button>
+        <div class="flex flex-col">
+            <span class="text-xs font-jpSerif font-bold text-vermilion flex items-center gap-1">
+                <i class="fas fa-compact-disc"></i> 琴・尺八 奏 (Koto Audio)
+            </span>
+            <span id="music-status" class="text-[10px] text-slate-500 dark:text-slate-400">Click to Play Ambient Sound</span>
+        </div>
+        <div id="visualizer" class="flex items-end gap-[2px] h-5 px-2 paused">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+        <audio id="bg-music" loop preload="auto">
+            <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=japanese-koto-and-flute-112349.mp3" type="audio/mpeg">
+            <source src="https://ia801503.us.archive.org/15/items/music-japan-traditional/japanese-flute-koto.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- Navigation Header -->
+    <nav class="sticky top-0 z-40 bg-white/85 dark:bg-darkNavy/85 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl 2xl:max-w-[1700px] 3xl:max-w-[2100px] mx-auto px-6 2xl:px-12 py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 2xl:w-12 2xl:h-12 rounded-full bg-vermilion text-white font-jpSerif flex items-center justify-center font-black text-lg 2xl:text-xl shadow-md group-hover:rotate-12 transition-transform">
+                    法
+                </div>
+                <div>
+                    <span class="text-xl 2xl:text-2xl font-black font-cinzel tracking-wider text-slateInk dark:text-white block leading-tight">FARES AYMAN</span>
+                    <span class="text-xs 2xl:text-sm font-jpSerif text-vermilion font-semibold">ファレス・アイマン • 開発者</span>
+                </div>
+            </a>
+
+            <div class="hidden md:flex items-center space-x-8 2xl:space-x-12 font-medium text-sm 2xl:text-base">
+                <a href="#about" class="hover:text-vermilion transition-colors flex items-center gap-1"><span class="text-xs text-vermilion">01.</span> 我 (About)</a>
+                <a href="#skills" class="hover:text-vermilion transition-colors flex items-center gap-1"><span class="text-xs text-vermilion">02.</span> 術 (Skills)</a>
+                <a href="#projects" class="hover:text-vermilion transition-colors flex items-center gap-1"><span class="text-xs text-vermilion">03.</span> 業 (Projects)</a>
+                <a href="#experience" class="hover:text-vermilion transition-colors flex items-center gap-1"><span class="text-xs text-vermilion">04.</span> 歴 (Experience)</a>
+                <a href="#contact" class="hover:text-vermilion transition-colors flex items-center gap-1"><span class="text-xs text-vermilion">05.</span> 便 (Contact)</a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="toggleDarkMode()" aria-label="Toggle Dark Mode" class="w-10 h-10 2xl:w-12 2xl:h-12 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-yellow-400 hover:text-vermilion dark:hover:text-yellow-300 flex items-center justify-center transition-all shadow-sm border border-slate-200 dark:border-slate-700">
+                    <i id="theme-icon" class="fas fa-moon text-base 2xl:text-lg"></i>
+                </button>
+
+                <a href="https://drive.google.com/file/d/1_HW0LaiJuyc9Av4Y63LWkNljhLuCbbke/view?usp=drive_link" target="_blank" class="hidden sm:flex items-center gap-2 bg-vermilion/10 text-vermilion border border-vermilion/40 hover:bg-vermilion hover:text-white px-4 py-2 2xl:px-6 2xl:py-3 rounded-lg transition-all font-bold text-xs 2xl:text-sm uppercase tracking-wider">
+                    <i class="fas fa-scroll"></i> Resume / 履歴書
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-[90vh] flex items-center justify-center px-6 2xl:px-12 py-16 overflow-hidden bg-asanoha">
+        <div class="max-w-7xl 2xl:max-w-[1700px] 3xl:max-w-[2100px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 2xl:gap-16 items-center w-full">
+            
+            <div class="lg:col-span-7 2xl:col-span-7 space-y-6 2xl:space-y-8 reveal-on-scroll">
+                <div class="inline-flex items-center gap-3 bg-white dark:bg-darkCard border border-vermilion/30 px-4 py-1.5 2xl:px-6 2xl:py-2 rounded-full shadow-sm">
+                    <span class="w-2.5 h-2.5 rounded-full bg-bambooGreen animate-ping"></span>
+                    <span class="text-xs 2xl:text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Data Analyst @ Valeo</span>
+                    <span class="hanko-stamp text-[10px] 2xl:text-xs py-0 px-1">現役</span>
+                </div>
+
+                <h1 class="text-4xl md:text-6xl 2xl:text-7xl 3xl:text-8xl font-black text-slateInk dark:text-white leading-tight font-cinzel">
+                    FARES AYMAN
+                    <span class="block text-2xl md:text-3xl 2xl:text-4xl 3xl:text-5xl font-jpSerif text-vermilion mt-1 font-extrabold">
+                        データアナリスト & バックエンドエンジニア
+                    </span>
+                </h1>
+
+                <p class="text-slate-600 dark:text-slate-400 text-lg 2xl:text-xl 3xl:text-2xl leading-relaxed max-w-3xl font-jpSans">
+                    Computer Science graduate from <strong class="text-slateInk dark:text-slate-100">Ain Shams University</strong>. Data Analyst at <strong class="text-slateInk dark:text-slate-100">Valeo</strong> specializing in business intelligence, <strong class="text-slateInk dark:text-slate-100">Power BI & Tableau reporting</strong>, complex <strong class="text-slateInk dark:text-slate-100">SQL queries</strong>, and automated Python data processing, backed by strong expertise in <strong class="text-slateInk dark:text-slate-100">Backend Architecture</strong> (Java Spring Boot, Domain-Driven Design) and modern web engineering.
+                </p>
+
+                <!-- Daily/Hourly Wisdom Quote Banner -->
+                <div class="bright-card p-4 2xl:p-6 rounded-xl border-l-4 border-l-vermilion border-slate-200 dark:border-slate-800 flex items-start gap-3 my-2 max-w-3xl">
+                    <div class="text-vermilion text-lg 2xl:text-2xl mt-0.5"><i class="fas fa-quote-left"></i></div>
+                    <div class="flex-1">
+                        <p id="quote-text" class="text-xs md:text-sm 2xl:text-base font-jpSerif italic text-slate-700 dark:text-slate-300">"Simplicity is prerequisite for reliability."</p>
+                        <span id="quote-author" class="block text-[11px] 2xl:text-xs font-bold text-vermilion mt-1 font-sans">— Edsger W. Dijkstra</span>
+                    </div>
+                    <button onclick="rotateQuote()" title="Refresh Wisdom" class="text-slate-400 hover:text-vermilion text-xs 2xl:text-sm transition-colors p-1">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+
+                <div class="flex flex-wrap gap-4 pt-2">
+                    <a href="#projects" class="bg-vermilion hover:bg-red-700 text-white font-bold px-8 py-4 2xl:px-10 2xl:py-5 rounded-xl shadow-lg hover:shadow-vermilion/30 transition-all flex items-center gap-3 group text-sm 2xl:text-base">
+                        <span>EXPLORE MISSIONS (プロジェクト)</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                    
+                    <a href="https://github.com/Faresaymann" target="_blank" class="bg-white dark:bg-darkCard hover:bg-slate-100 dark:hover:bg-slate-800 text-slateInk dark:text-slate-200 border border-slate-300 dark:border-slate-700 font-bold px-6 py-4 2xl:px-8 2xl:py-5 rounded-xl shadow-sm transition-all flex items-center gap-2 text-sm 2xl:text-base">
+                        <i class="fab fa-github text-xl 2xl:text-2xl text-slate-800 dark:text-white"></i>
+                        <span>GitHub</span>
+                    </a>
+
+                    <a href="https://linkedin.com/in/faress-ayman" target="_blank" class="bg-white dark:bg-darkCard hover:bg-slate-100 dark:hover:bg-slate-800 text-slateInk dark:text-slate-200 border border-slate-300 dark:border-slate-700 font-bold px-6 py-4 2xl:px-8 2xl:py-5 rounded-xl shadow-sm transition-all flex items-center gap-2 text-sm 2xl:text-base">
+                        <i class="fab fa-linkedin text-xl 2xl:text-2xl text-blue-600"></i>
+                        <span>LinkedIn</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- RPG Character Stats Card -->
+            <div class="lg:col-span-5 2xl:col-span-5 reveal-on-scroll delay-2">
+                <div class="bright-card rounded-2xl p-6 md:p-8 2xl:p-10 relative border-2 border-vermilion/20">
+                    <div class="absolute -top-4 right-8 bg-vermilion text-white font-jpSerif font-bold text-xs 2xl:text-sm px-4 py-1 rounded-md shadow-md uppercase tracking-wider">
+                        STATUS • CLASS: DATA ANALYST & BACKEND ARCHITECT
+                    </div>
+
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-16 h-16 2xl:w-20 2xl:h-20 rounded-2xl bg-gradient-to-br from-vermilion to-amber-500 text-white flex items-center justify-center font-jpSerif font-black text-2xl 2xl:text-3xl shadow-md border-2 border-white">
+                            法
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl 2xl:text-2xl text-slateInk dark:text-white">Fares Ayman</h3>
+                            <p class="text-xs 2xl:text-sm text-vermilion font-bold font-jpSerif">VALEO DATA ANALYST • AIN SHAMS CS GRADUATE</p>
+                            <p class="text-xs 2xl:text-sm text-slate-500 dark:text-slate-400 mt-0.5"><i class="fas fa-map-marker-alt text-vermilion"></i> Cairo, Egypt</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 2xl:space-y-6">
+                        <div>
+                            <div class="flex justify-between text-xs 2xl:text-sm font-bold mb-1">
+                                <span class="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                                    <i class="fas fa-chart-line text-amber-500"></i> Data Analytics & BI (Power BI, Tableau, Advanced SQL)
+                                </span>
+                                <span class="text-amber-600 font-mono">98%</span>
+                            </div>
+                            <div class="w-full bg-slate-200 dark:bg-slate-800 h-2.5 2xl:h-3 rounded-full overflow-hidden">
+                                <div class="bg-amber-500 h-full rounded-full" style="width: 98%"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs 2xl:text-sm font-bold mb-1">
+                                <span class="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                                    <i class="fas fa-server text-vermilion"></i> Backend Engineering (Java Spring Boot, Node.js, DDD)
+                                </span>
+                                <span class="text-vermilion font-mono">92%</span>
+                            </div>
+                            <div class="w-full bg-slate-200 dark:bg-slate-800 h-2.5 2xl:h-3 rounded-full overflow-hidden">
+                                <div class="bg-vermilion h-full rounded-full" style="width: 92%"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs 2xl:text-sm font-bold mb-1">
+                                <span class="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                                    <i class="fas fa-desktop text-bambooGreen"></i> Frontend Web (React, Redux, Angular, TypeScript)
+                                </span>
+                                <span class="text-bambooGreen font-mono">88%</span>
+                            </div>
+                            <div class="w-full bg-slate-200 dark:bg-slate-800 h-2.5 2xl:h-3 rounded-full overflow-hidden">
+                                <div class="bg-bambooGreen h-full rounded-full" style="width: 88%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 text-xs 2xl:text-sm flex justify-between items-center text-slate-600 dark:text-slate-400">
+                        <span class="font-bold flex items-center gap-1 text-slate-800 dark:text-slate-200"><i class="fas fa-trophy text-amber-500"></i> Codeforces Pupil (1288)</span>
+                        <span class="font-semibold text-slate-500 dark:text-slate-400">250+ Problems Solved</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- About Me Section -->
+    <section id="about" class="py-20 2xl:py-28 px-6 2xl:px-12 max-w-7xl 2xl:max-w-[1700px] 3xl:max-w-[2100px] mx-auto">
+        <div class="text-center mb-16 2xl:mb-20 reveal-on-scroll">
+            <span class="hanko-stamp text-xs 2xl:text-sm mb-2">忍耐 • 成長</span>
+            <h2 class="text-3xl md:text-5xl 2xl:text-6xl font-black font-cinzel text-slateInk dark:text-white">MY JOURNEY • 物語</h2>
+            <p class="text-slate-500 dark:text-slate-400 font-jpSerif mt-2 2xl:text-lg">Manga Panel Chronicles of my Academic & Industry Growth</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 2xl:gap-12">
+            <div class="bright-card p-6 2xl:p-8 rounded-2xl border-2 border-slate-300 dark:border-slate-800 hover:border-vermilion transition-all reveal-on-scroll delay-1">
+                <div class="w-12 h-12 2xl:w-16 2xl:h-16 rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 flex items-center justify-center font-bold text-xl 2xl:text-2xl mb-4">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <span class="text-xs 2xl:text-sm font-bold text-amber-600 font-jpSerif uppercase">Panel 01 • Business Intelligence</span>
+                <h3 class="text-xl 2xl:text-2xl font-bold text-slateInk dark:text-white mt-1 mb-3">Enterprise Data & Insights</h3>
+                <p class="text-slate-600 dark:text-slate-400 text-sm 2xl:text-base leading-relaxed">
+                    Driving data excellence at Valeo by mastering Power BI, Tableau, and automated Python pipelines. Transforming raw product catalogs containing 80K+ records into clear visual intelligence that powers critical executive decisions.
+                </p>
+            </div>
+
+            <div class="bright-card p-6 2xl:p-8 rounded-2xl border-2 border-slate-300 dark:border-slate-800 hover:border-vermilion transition-all reveal-on-scroll delay-2">
+                <div class="w-12 h-12 2xl:w-16 2xl:h-16 rounded-xl bg-red-100 dark:bg-red-900/30 text-vermilion flex items-center justify-center font-bold text-xl 2xl:text-2xl mb-4">
+                    <i class="fas fa-cubes"></i>
+                </div>
+                <span class="text-xs 2xl:text-sm font-bold text-vermilion font-jpSerif uppercase">Panel 02 • Technical Mastery</span>
+                <h3 class="text-xl 2xl:text-2xl font-bold text-slateInk dark:text-white mt-1 mb-3">Architectural Engineering</h3>
+                <p class="text-slate-600 dark:text-slate-400 text-sm 2xl:text-base leading-relaxed">
+                    Forged through Computer Science rigor at Ain Shams University and continuous high-level self-driven study. Architecting fault-tolerant microservices, Domain-Driven Design (DDD) patterns, and enterprise-grade Spring Boot APIs.
+                </p>
+            </div>
+
+            <div class="bright-card p-6 2xl:p-8 rounded-2xl border-2 border-slate-300 dark:border-slate-800 hover:border-vermilion transition-all reveal-on-scroll delay-3">
+                <div class="w-12 h-12 2xl:w-16 2xl:h-16 rounded-xl bg-green-100 dark:bg-green-900/30 text-bambooGreen flex items-center justify-center font-bold text-xl 2xl:text-2xl mb-4">
+                    <i class="fab fa-react"></i>
+                </div>
+                <span class="text-xs 2xl:text-sm font-bold text-bambooGreen font-jpSerif uppercase">Panel 03 • Frontend Innovation</span>
+                <h3 class="text-xl 2xl:text-2xl font-bold text-slateInk dark:text-white mt-1 mb-3">Modular User Experiences</h3>
+                <p class="text-slate-600 dark:text-slate-400 text-sm 2xl:text-base leading-relaxed">
+                    Selected for the prestigious Information Technology Institute (ITI) program. Engineered modular, scalable React & Redux architectures, creating seamless web solutions and standardizing reusable component libraries.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skill Tree Section -->
+    <section id="skills" class="py-20 2xl:py-28 px-6 2xl:px-12 max-w-7xl 2xl:max-w-[1700px] 3xl:max-w-[2100px] mx-auto">
+        <div class="text-center mb-16 2xl:mb-20 reveal-on-scroll">
+            <span class="hanko-stamp text-xs 2xl:text-sm mb-2">奥義 • スキル</span>
+            <h2 class="text-3xl md:text-5xl 2xl:text-6xl font-black font-cinzel text-slateInk dark:text-white">SKILL TREE • 技能の木</h2>
+            <p class="text-slate-500 dark:text-slate-400 font-jpSerif mt-2 2xl:text-lg">Data Analytics, Business Intelligence & Software Tooling</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 2xl:gap-12 items-stretch">
+            
+            <!-- Category 1: Comprehensive Data Analysis & BI -->
+            <div class="bright-card rounded-2xl p-6 2xl:p-8 border border-slate-200 dark:border-slate-800 flex flex-col justify-between h-full reveal-on-scroll delay-1">
+                <div>
+                    <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-4 mb-6">
+                        <div class="w-10 h-10 2xl:w-12 2xl:h-12 rounded-lg bg-amber-500 text-white flex items-center justify-center font-bold text-lg 2xl:text-xl">
+                            <i class="fas fa-chart-column"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg 2xl:text-xl text-slateInk dark:text-white">Data Analytics & BI</h3>
+                            <span class="text-xs 2xl:text-sm text-amber-600 font-jpSerif font-semibold">データ分析 & BI ツール</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 2xl:space-y-4">
+                        <div class="flex justify-between items-center p-3 2xl:p-4 rounded-xl bg-white dark:bg-darkNavy border border-slate-100 dark:border-slate-800 shadow-sm min-h-[52px]">
+                            <span class="font-bold text-sm 2xl:text-base text-slate-700 dark:text-slate-300 flex items-center gap-2"><i class="fas fa-chart-line text-amber-500"></i> Power BI & Tableau (DAX)</span>
+                            <span class="text-xs 2xl:text-sm font-bold text-amber-600 bg-amber-50 dark:bg-amber-950/40 px-2 py-1 rounded shrink-0">SSR Grade</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 2xl:p-4 rounded-xl bg-white dark:bg-darkNavy border border-slate-100 dark:border-slate-800 shadow-sm min-h-[52px]">
+                            <span class="font-bold text-sm 2xl:text-base text-slate-700 dark:text-slate-300 flex items-center gap-2"><i class="fas fa-database text-blue-600"></i> Advanced SQL (CTEs, Window Functions)</span>
+                            <span class="text-xs 2xl:text-sm font-bold text-amber-600 bg-amber-50 dark:bg-amber-950/40 px-2 py-1 rounded shrink-0">SSR Grade</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 2xl:p-4 rounded-xl bg-white dark:bg-darkNavy border border-slate-100 dark:border-slate-800 shadow-sm min-h-[52px]">
+                            <span class="font-bold text-sm 2xl:text-base text-slate-700 dark:text-slate-300 flex items-center gap-2"><i class="fab fa-python text-blue-600"></i> Python (Pandas, Seaborn)</span>
+                            <span class="text-xs 2xl:text-sm font-bold text-amber-600 bg-amber-50 dark:bg-amber-950/40 px-2 py-1 rounded shrink-0">SSR Grade</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 2xl:p-4 rounded-xl bg-white dark:bg-darkNavy border border-slate-100 dark:border-slate-800 shadow-sm min-h-[52px]">
+                            <span class="font-bold text-sm 2xl:text-base text-slate-700 dark:text-slate-300 flex items-center gap-2"><i class="fas fa-file-excel text-green-600"></i> Excel & Power Query Pipelines</span>
+                            <span class="text-xs 2xl:text-sm font-bold text-amber-600 bg-amber-50 dark:bg-amber-950/40 px-2 py-1 rounded shrink-0">SSR Grade</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category 2: Backend Architecture -->
+            <div class="bright-card rounded-2xl p-6 2xl:p-8 border border-slate-200 dark:border-slate-800 flex flex-col justify-between h-full reveal-on-scroll delay-2">
+                <div>
+                    <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-4 mb-6">
+                        <div class="w-10 h-10 2xl:w-12 2xl:h-12 rounded-lg bg-vermilion text-white flex items-center justify-center font-bold text-lg 2xl:text-xl">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg 2xl:text-xl text-slateInk dark:text-white">Backend Architecture</h3>
+                            <span class="text-xs 2xl:text-sm text-vermilion font-jpSerif font-semibold">バックエンド開発</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 2xl:space-y-4">
+                        <div class="flex justify-between items-center p-3 2xl:p-4 rounded-xl bg-white dark:bg-darkNavy border border-slate-100 dark:border-slate-800 shadow-sm min-h-[52px]">
+                            <span class="font-bold text-sm 2xl:text-base text-slate-700 dark:text-slate-300 flex items-center gap-2"><i class="fab fa-java text-orange-600"></i> Java / Spring Boot</span>
+                            <span class="text-xs 2xl:text-sm font-bold text-vermilion bg-red-50 dark:bg-red-950/40 px-2 py-1 rounded shrink-0">SSR Grade</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 2xl:p-4 rounded-xl bg-white dark:bg-darkNavy border border-slate-100 dark:border-slate-800 shadow-sm min-h-[52px]">
+                            <span class="font-bold text-sm 2xl:text-base text-slate-700 dark:text-slate-300 flex items-center gap-2"><i class="fas fa-sitemap text-vermilion"></i> DDD & Clean Architecture</span>
+                            <span class="text-xs 2xl:text-sm font-bold text-vermilion bg-red-50 dark:bg-red-950/40 px-2 py-1 rounded shrink-0">SSR Grade</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 2xl:p-4 rounded-xl bg-white dark:bg-darkNavy border border-slate-100 dark:border-slate-800 shadow-sm min-h-[52px]">
+                            <span class="font-bold text-sm 2xl:text-base text-slate-700 dark:text-slate-300 flex items-center gap-2"><i class="fab fa-node-js text-green-600"></i> Node.js, Express, FastAPI</span>
+                            <span class="text-xs 2xl:text-sm font-bold text-vermilion bg-red-50 dark:bg-red-950/40 px-2 py-1 rounded shrink-0">SR Grade</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 2xl:p-4 rounded-xl bg-white dark:bg-darkNavy border border-slate-100 dark:border-slate-800 shadow-sm min-h-[52px]">
+                            <span class="font-bold text-sm 2xl:text-base text-slate-700 dark:text-slate-300 flex items-center gap-2"><i class="fas fa-layer-group text-slate-700 dark:text-slate-300"></i> Relational DBs (PostgreSQL)</span>
+                            <span class="text-xs 2xl:text-sm font-bold text-vermilion bg-red-50 dark:bg-red-950/40 px-2 py-1 rounded shrink-0">SSR Grade</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category 3: Frontend Web -->
+            <div class="bright-card rounded-2xl p-6 2xl:p-8 border border-slate-200 dark:border-slate-800 flex flex-col justify-between h-full reveal-on-scroll delay-3">
+                <div>
+                    <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-4 mb-6">
+                        <div class="w-10 h-10 2xl:w-12 2xl:h-12 rounded-lg bg-bambooGreen text-white flex items-center justify-center font-bold text-lg 2xl:text-xl">
+                            <i class="fas fa-desktop"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg 2xl:text-xl text-slateInk dark:text-white">Frontend Web</h3>
+                            <span class="text-xs 2xl:text-sm text-bambooGreen font-jpSerif font-semibold">フロントエンド</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 2xl:space-y-4">
+                        <div class="flex justify-between items-center p-3 2xl:p-4 rounded-xl bg-white dark:bg-darkNavy border border-slate-100 dark:border-slate-800 shadow-sm min-h-[52px]">
+                            <span class="font-bold text-sm 2xl:text-base text-slate-700 dark:text-slate-300 flex items-center gap-2"><i class="fab fa-react text-sky-500"></i> React.js & Redux</span>
+                            <span class="text-xs 2xl:text-sm font-bold text-bambooGreen bg-green-50 dark:bg-green-950/40 px-2 py-1 rounded shrink-0">SSR Grade</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 2xl:p-4 rounded-xl bg-white dark:bg-darkNavy border border-slate-100 dark:border-slate-800 shadow-sm min-h-[52px]">
+                            <span class="font-bold text-sm 2xl:text-base text-slate-700 dark:text-slate-300 flex items-center gap-2"><i class="fab fa-angular text-red-600"></i> Angular & TypeScript</span>
+                            <span class="text-xs 2xl:text-sm font-bold text-bambooGreen bg-green-50 dark:bg-green-950/40 px-2 py-1 rounded shrink-0">SR Grade</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 2xl:p-4 rounded-xl bg-white dark:bg-darkNavy border border-slate-100 dark:border-slate-800 shadow-sm min-h-[52px]">
+                            <span class="font-bold text-sm 2xl:text-base text-slate-700 dark:text-slate-300 flex items-center gap-2"><i class="fab fa-js-square text-yellow-500"></i> JavaScript ES6+, HTML5/CSS3</span>
+                            <span class="text-xs 2xl:text-sm font-bold text-bambooGreen bg-green-50 dark:bg-green-950/40 px-2 py-1 rounded shrink-0">SSR Grade</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 2xl:p-4 rounded-xl bg-white dark:bg-darkNavy border border-slate-100 dark:border-slate-800 shadow-sm min-h-[52px]">
+                            <span class="font-bold text-sm 2xl:text-base text-slate-700 dark:text-slate-300 flex items-center gap-2"><i class="fas fa-palette text-pink-500"></i> Tailwind CSS & UI Design</span>
+                            <span class="text-xs 2xl:text-sm font-bold text-bambooGreen bg-green-50 dark:bg-green-950/40 px-2 py-1 rounded shrink-0">SSR Grade</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Projects Grid Section -->
+    <section id="projects" class="py-20 2xl:py-28 px-6 2xl:px-12 max-w-7xl 2xl:max-w-[1700px] 3xl:max-w-[2100px] mx-auto">
+        <div class="text-center mb-12 2xl:mb-16 reveal-on-scroll">
+            <span class="hanko-stamp text-xs 2xl:text-sm mb-2">任務 • プロジェクト</span>
+            <h2 class="text-3xl md:text-5xl 2xl:text-6xl font-black font-cinzel text-slateInk dark:text-white">MISSION ARCHIVES</h2>
+            <p class="text-slate-500 dark:text-slate-400 font-jpSerif mt-2 2xl:text-lg">Featured Repositories & Real-World Projects</p>
+            
+            <div class="flex flex-wrap justify-center gap-3 2xl:gap-4 mt-8">
+                <button onclick="filterProjects('all')" class="project-filter-btn active bg-vermilion text-white px-5 py-2 2xl:px-7 2xl:py-3 rounded-xl text-xs 2xl:text-sm font-bold transition-all shadow-sm">
+                    ALL MISSIONS (すべて)
+                </button>
+                <button onclick="filterProjects('data')" class="project-filter-btn bg-white dark:bg-darkCard hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 px-5 py-2 2xl:px-7 2xl:py-3 rounded-xl text-xs 2xl:text-sm font-bold transition-all">
+                    DATA & BI
+                </button>
+                <button onclick="filterProjects('backend')" class="project-filter-btn bg-white dark:bg-darkCard hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 px-5 py-2 2xl:px-7 2xl:py-3 rounded-xl text-xs 2xl:text-sm font-bold transition-all">
+                    JAVA & BACKEND
+                </button>
+                <button onclick="filterProjects('frontend')" class="project-filter-btn bg-white dark:bg-darkCard hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 px-5 py-2 2xl:px-7 2xl:py-3 rounded-xl text-xs 2xl:text-sm font-bold transition-all">
+                    REACT & ANGULAR
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-3 gap-8 2xl:gap-10">
+            
+            <!-- 1. DDD Order Management -->
+            <div class="project-card bright-card rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col justify-between reveal-on-scroll delay-1" data-category="backend">
+                <div class="p-6 2xl:p-8">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] 2xl:text-xs font-bold font-jpSerif uppercase bg-red-100 dark:bg-red-950/50 text-vermilion px-2.5 py-1 rounded-md">
+                            Mission 01 • Java & Clean Arch
+                        </span>
+                        <i class="fas fa-sitemap text-xl 2xl:text-2xl text-slate-400"></i>
+                    </div>
+                    <h3 class="text-xl 2xl:text-2xl font-bold text-slateInk dark:text-white mb-2">Order Management System</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm 2xl:text-base leading-relaxed mb-4">
+                        Architected using Domain-Driven Design (DDD) and Clean Architecture, modeling aggregates, value objects, and domain events with 70+ JUnit 5 tests (90%+ coverage).
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="text-[11px] 2xl:text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">Java</span>
+                        <span class="text-[11px] 2xl:text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">Spring Boot</span>
+                        <span class="text-[11px] 2xl:text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">DDD</span>
+                        <span class="text-[11px] 2xl:text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">JUnit 5</span>
+                    </div>
+                </div>
+                <div class="p-6 2xl:p-8 pt-0 border-t border-slate-100 dark:border-slate-800 mt-auto flex justify-between items-center">
+                    <a href="https://github.com/Faresaymann/ddd-order-management" target="_blank" class="text-xs 2xl:text-sm font-bold text-vermilion hover:underline flex items-center gap-1">
+                        <i class="fab fa-github"></i> GitHub Repository
+                    </a>
+                </div>
+            </div>
+
+            <!-- 2. Valeo Product Data Automation & BI -->
+            <div class="project-card bright-card rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col justify-between reveal-on-scroll delay-2" data-category="data">
+                <div class="p-6 2xl:p-8">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] 2xl:text-xs font-bold font-jpSerif uppercase bg-amber-100 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400 px-2.5 py-1 rounded-md">
+                            Mission 02 • Valeo Data & BI
+                        </span>
+                        <i class="fas fa-chart-line text-xl 2xl:text-2xl text-slate-400"></i>
+                    </div>
+                    <h3 class="text-xl 2xl:text-2xl font-bold text-slateInk dark:text-white mb-2">Enterprise Analytics & BI Dashboard</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm 2xl:text-base leading-relaxed mb-4">
+                        End-to-end data pipelines built for Valeo. Automated large-scale dataset validation (80K+ rows) using Python (Pandas) and transformed catalog metrics into interactive Power BI and Tableau dashboards.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="text-[11px] 2xl:text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">Power BI</span>
+                        <span class="text-[11px] 2xl:text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">Tableau</span>
+                        <span class="text-[11px] 2xl:text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">SQL</span>
+                        <span class="text-[11px] 2xl:text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">Python</span>
+                    </div>
+                </div>
+                <div class="p-6 2xl:p-8 pt-0 border-t border-slate-100 dark:border-slate-800 mt-auto flex justify-between items-center">
+                    <span class="text-xs 2xl:text-sm font-bold text-amber-700 dark:text-amber-400 flex items-center gap-1">
+                        <i class="fas fa-building"></i> Valeo Core Role
+                    </span>
+                    <span class="text-[10px] 2xl:text-xs text-slate-400 font-mono">2026 - PRESENT</span>
+                </div>
+            </div>
+
+            <!-- 3. E-Commerce Backend API -->
+            <div class="project-card bright-card rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col justify-between reveal-on-scroll delay-3" data-category="backend">
+                <div class="p-6 2xl:p-8">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] 2xl:text-xs font-bold font-jpSerif uppercase bg-red-100 dark:bg-red-950/50 text-vermilion px-2.5 py-1 rounded-md">
+                            Mission 03 • Java Microservice
+                        </span>
+                        <i class="fas fa-shopping-cart text-xl 2xl:text-2xl text-slate-400"></i>
+                    </div>
+                    <h3 class="text-xl 2xl:text-2xl font-bold text-slateInk dark:text-white mb-2">E-Commerce Backend API</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm 2xl:text-base leading-relaxed mb-4">
+                        Spring Boot backend exposing 20+ REST APIs with Spring Security, JWT auth, PostgreSQL persistence, Stripe payments, and Cloudinary media storage.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="text-[11px] 2xl:text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">Spring Boot</span>
+                        <span class="text-[11px] 2xl:text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">PostgreSQL</span>
+                        <span class="text-[11px] 2xl:text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">Stripe</span>
+                    </div>
+                </div>
+                <div class="p-6 2xl:p-8 pt-0 border-t border-slate-100 dark:border-slate-800 mt-auto flex justify-between items-center">
+                    <a href="https://github.com/Faresaymann/ecommerce-platform" target="_blank" class="text-xs 2xl:text-sm font-bold text-vermilion hover:underline flex items-center gap-1">
+                        <i class="fab fa-github"></i> GitHub Repository
+                    </a>
+                </div>
+            </div>
+
+            <!-- 4. E-Learning Backend Platform -->
+            <div class="project-card bright-card rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col justify-between reveal-on-scroll delay-1" data-category="backend">
+                <div class="p-6 2xl:p-8">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] 2xl:text-xs font-bold font-jpSerif uppercase bg-red-100 dark:bg-red-950/50 text-vermilion px-2.5 py-1 rounded-md">
+                            Mission 04 • Node.js REST API
+                        </span>
+                        <i class="fas fa-graduation-cap text-xl 2xl:text-2xl text-slate-400"></i>
+                    </div>
+                    <h3 class="text-xl 2xl:text-2xl font-bold text-slateInk dark:text-white mb-2">E-Learning Backend Platform</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm 2xl:text-base leading-relaxed mb-4">
+                        Node.js & Express API with MongoDB, featuring 15+ endpoints, course tracking, JWT authentication, and role-based authorization for Students, Instructors, and Admins.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="text-[11px] 2xl:text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">Node.js</span>
+                        <span class="text-[11px] 2xl:text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">MongoDB</span>
+                        <span class="text-[11px] 2xl:text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">JWT</span>
+                    </div>
+                </div>
+                <div class="p-6 2xl:p-8 pt-0 border-t border-slate-100 dark:border-slate-800 mt-auto flex justify-between items-center">
+                    <a href="https://github.com/Faresaymann/CourseHub" target="_blank" class="text-xs 2xl:text-sm font-bold text-vermilion hover:underline flex items-center gap-1">
+                        <i class="fab fa-github"></i> GitHub Repository
+                    </a>
+                </div>
+            </div>
+
+            <!-- 5. Angular Tic Tac Toe Game -->
+            <div class="project-card bright-card rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col justify-between reveal-on-scroll delay-2" data-category="frontend">
+                <div class="p-6 2xl:p-8">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] 2xl:text-xs font-bold font-jpSerif uppercase bg-green-100 dark:bg-green-950/50 text-bambooGreen px-2.5 py-1 rounded-md">
+                            Mission 05 • Angular & Firebase
+                        </span>
+                        <i class="fas fa-gamepad text-xl 2xl:text-2xl text-slate-400"></i>
+                    </div>
+                    <h3 class="text-xl 2xl:text-2xl font-bold text-slateInk dark:text-white mb-2">Multiplayer Tic-Tac-Toe</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm 2xl:text-base leading-relaxed mb-4">
+                        Real-time multiplayer game built with Angular and Firebase (Firestore + Google Auth) featuring live board sync, room gameplay, and player statistics.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="text-[11px] 2xl:text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">Angular</span>
+                        <span class="text-[11px] 2xl:text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">Firebase</span>
+                        <span class="text-[11px] 2xl:text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">Firestore</span>
+                    </div>
+                </div>
+                <div class="p-6 2xl:p-8 pt-0 border-t border-slate-100 dark:border-slate-800 mt-auto flex justify-between items-center">
+                    <a href="https://github.com/Faresaymann/angular-tic-tac-toe-game" target="_blank" class="text-xs 2xl:text-sm font-bold text-vermilion hover:underline flex items-center gap-1">
+                        <i class="fab fa-github"></i> GitHub Repository
+                    </a>
+                </div>
+            </div>
+
+            <!-- 6. ITI Final Project -->
+            <div class="project-card bright-card rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col justify-between reveal-on-scroll delay-3" data-category="frontend">
+                <div class="p-6 2xl:p-8">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] 2xl:text-xs font-bold font-jpSerif uppercase bg-green-100 dark:bg-green-950/50 text-bambooGreen px-2.5 py-1 rounded-md">
+                            Mission 06 • ITI React Project
+                        </span>
+                        <i class="fab fa-react text-xl 2xl:text-2xl text-slate-400"></i>
+                    </div>
+                    <h3 class="text-xl 2xl:text-2xl font-bold text-slateInk dark:text-white mb-2">ITI Modular Web Application</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm 2xl:text-base leading-relaxed mb-4">
+                        React web application engineered during the ITI software development track. Built with Redux state isolation, CSS Grid, and modular UI patterns.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="text-[11px] 2xl:text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">React</span>
+                        <span class="text-[11px] 2xl:text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">Redux</span>
+                        <span class="text-[11px] 2xl:text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">JavaScript</span>
+                    </div>
+                </div>
+                <div class="p-6 2xl:p-8 pt-0 border-t border-slate-100 dark:border-slate-800 mt-auto flex justify-between items-center">
+                    <a href="https://github.com/Faresaymann/ITI-Final-Project" target="_blank" class="text-xs 2xl:text-sm font-bold text-vermilion hover:underline flex items-center gap-1">
+                        <i class="fab fa-github"></i> GitHub Repository
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Experience Quest Log Section -->
+    <section id="experience" class="py-20 2xl:py-28 px-6 2xl:px-12 max-w-5xl 2xl:max-w-[1400px] 3xl:max-w-[1800px] mx-auto">
+        <div class="text-center mb-16 2xl:mb-20 reveal-on-scroll">
+            <span class="hanko-stamp text-xs 2xl:text-sm mb-2">経歴 • クエスト</span>
+            <h2 class="text-3xl md:text-5xl 2xl:text-6xl font-black font-cinzel text-slateInk dark:text-white">QUEST LOG</h2>
+            <p class="text-slate-500 dark:text-slate-400 font-jpSerif mt-2 2xl:text-lg">Chronological Industry Experience & Education</p>
+        </div>
+
+        <div class="relative border-l-2 border-vermilion/30 ml-4 md:ml-24 space-y-12 2xl:space-y-16">
+            
+            <!-- Quest 1: Valeo -->
+            <div class="relative pl-8 group reveal-on-scroll delay-1">
+                <div class="absolute -left-[17px] top-0 w-8 h-8 2xl:w-10 2xl:h-10 2xl:-left-[21px] rounded-full bg-vermilion text-white flex items-center justify-center font-bold text-xs 2xl:text-sm shadow-md">
+                    現
+                </div>
+                <div class="bright-card p-6 2xl:p-8 rounded-2xl border border-slate-200 dark:border-slate-800">
+                    <div class="flex flex-wrap justify-between items-start gap-2 mb-2">
+                        <div>
+                            <h3 class="text-xl 2xl:text-2xl font-bold text-slateInk dark:text-white">Data Analyst</h3>
+                            <span class="text-sm 2xl:text-base font-bold text-vermilion font-jpSerif">Valeo — Cairo, Egypt</span>
+                        </div>
+                        <span class="text-xs 2xl:text-sm font-bold bg-red-50 dark:bg-red-950/40 text-vermilion px-3 py-1 rounded-full border border-red-100 dark:border-red-900/50">
+                            Jun 2026 – Present
+                        </span>
+                    </div>
+                    <ul class="text-slate-600 dark:text-slate-400 text-sm 2xl:text-base space-y-2 mt-4 list-disc list-inside">
+                        <li>Architected interactive Business Intelligence dashboards in <strong>Power BI</strong> and <strong>Tableau</strong>, delivering real-time monitoring of product cross-references and key performance indicators.</li>
+                        <li>Automated complex data validation and ETL workflows across enterprise datasets containing up to 80,000 records using Python (Pandas, OpenPyXL) and Power Query.</li>
+                        <li>Executed advanced SQL queries, window functions, and data transformations to identify catalogue anomalies and support high-level corporate decision-making.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Quest 2: ITI Software Development -->
+            <div class="relative pl-8 group reveal-on-scroll delay-2">
+                <div class="absolute -left-[17px] top-0 w-8 h-8 2xl:w-10 2xl:h-10 2xl:-left-[21px] rounded-full bg-bambooGreen text-white flex items-center justify-center font-bold text-xs 2xl:text-sm shadow-md">
+                    修
+                </div>
+                <div class="bright-card p-6 2xl:p-8 rounded-2xl border border-slate-200 dark:border-slate-800">
+                    <div class="flex flex-wrap justify-between items-start gap-2 mb-2">
+                        <div>
+                            <h3 class="text-xl 2xl:text-2xl font-bold text-slateInk dark:text-white">Software Developer (React.js Track)</h3>
+                            <span class="text-sm 2xl:text-base font-bold text-bambooGreen font-jpSerif">Information Technology Institute (ITI)</span>
+                        </div>
+                        <span class="text-xs 2xl:text-sm font-bold bg-green-50 dark:bg-green-950/40 text-bambooGreen px-3 py-1 rounded-full border border-green-100 dark:border-green-900/50">
+                            Jun 2024 – Jul 2024
+                        </span>
+                    </div>
+                    <ul class="text-slate-600 dark:text-slate-400 text-sm 2xl:text-base space-y-2 mt-4 list-disc list-inside">
+                        <li>Spearheaded the development of 5 high-performance React web interfaces integrated with Redux for centralized state management.</li>
+                        <li>Architected 10+ reusable modular React components, establishing a scalable UI kit across 5 core modules and reducing feature delivery cycles by 25%.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Quest 3: Education & Self-Driven Backend Study -->
+            <div class="relative pl-8 group reveal-on-scroll delay-3">
+                <div class="absolute -left-[17px] top-0 w-8 h-8 2xl:w-10 2xl:h-10 2xl:-left-[21px] rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-xs 2xl:text-sm shadow-md">
+                    学
+                </div>
+                <div class="bright-card p-6 2xl:p-8 rounded-2xl border border-slate-200 dark:border-slate-800">
+                    <div class="flex flex-wrap justify-between items-start gap-2 mb-2">
+                        <div>
+                            <h3 class="text-xl 2xl:text-2xl font-bold text-slateInk dark:text-white">B.Sc. in Computer Science & Backend Research</h3>
+                            <span class="text-sm 2xl:text-base font-bold text-amber-600 font-jpSerif">Ain Shams University — Cairo, Egypt</span>
+                        </div>
+                        <span class="text-xs 2xl:text-sm font-bold bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 px-3 py-1 rounded-full border border-amber-100 dark:border-amber-900/50">
+                            Graduated Sept 2025
+                        </span>
+                    </div>
+                    <ul class="text-slate-600 dark:text-slate-400 text-sm 2xl:text-base space-y-2 mt-4 list-disc list-inside">
+                        <li>Core Foundation: Algorithms, Complex Data Structures, Database Architecture, Software Engineering, and Operating Systems.</li>
+                        <li>Independent Research: Built fault-tolerant Spring Boot architectures using Domain-Driven Design (DDD), Clean Architecture, and competitive algorithmic problem solving (Codeforces Pupil).</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Japanese Shrine & Washi Parchment Contact Section -->
+    <section id="contact" class="py-20 2xl:py-28 px-6 2xl:px-12 max-w-4xl 2xl:max-w-[1200px] mx-auto">
+        <div class="text-center mb-12 2xl:mb-16 reveal-on-scroll">
+            <span class="hanko-stamp text-xs 2xl:text-sm mb-2">連絡 • 絵馬</span>
+            <h2 class="text-3xl md:text-5xl 2xl:text-6xl font-black font-cinzel text-slateInk dark:text-white">DISPATCH A MESSAGE</h2>
+            <p class="text-slate-500 dark:text-slate-400 font-jpSerif mt-2 2xl:text-lg">Send an Inquiry or Connect for Collaboration</p>
+        </div>
+
+        <div class="bright-card rounded-3xl p-8 md:p-12 2xl:p-16 border-2 border-vermilion/30 relative overflow-hidden shadow-2xl reveal-on-scroll">
+            <form onsubmit="handleFormSubmit(event)" class="relative z-10 space-y-6 2xl:space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 2xl:gap-8">
+                    <div>
+                        <label class="block text-xs 2xl:text-sm font-bold font-jpSerif text-slate-700 dark:text-slate-300 uppercase mb-2">
+                            <i class="fas fa-user text-vermilion mr-1"></i> Your Name / お名前
+                        </label>
+                        <input type="text" required placeholder="Fares Ayman" class="w-full bg-slate-50 dark:bg-darkNavy border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 2xl:px-5 2xl:py-4 text-sm 2xl:text-base text-slateInk dark:text-white focus:outline-none focus:border-vermilion focus:ring-1 focus:ring-vermilion transition-all">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs 2xl:text-sm font-bold font-jpSerif text-slate-700 dark:text-slate-300 uppercase mb-2">
+                            <i class="fas fa-envelope text-vermilion mr-1"></i> Email Address / メール
+                        </label>
+                        <input type="email" required placeholder="faressaymann@gmail.com" class="w-full bg-slate-50 dark:bg-darkNavy border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 2xl:px-5 2xl:py-4 text-sm 2xl:text-base text-slateInk dark:text-white focus:outline-none focus:border-vermilion focus:ring-1 focus:ring-vermilion transition-all">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs 2xl:text-sm font-bold font-jpSerif text-slate-700 dark:text-slate-300 uppercase mb-2">
+                        <i class="fas fa-comment-alt text-vermilion mr-1"></i> Message Details / 本文
+                    </label>
+                    <textarea rows="4" required placeholder="Write your message regarding Data Analysis, Power BI dashboards, Backend engineering, or opportunities..." class="w-full bg-slate-50 dark:bg-darkNavy border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 2xl:px-5 2xl:py-4 text-sm 2xl:text-base text-slateInk dark:text-white focus:outline-none focus:border-vermilion focus:ring-1 focus:ring-vermilion transition-all"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-vermilion hover:bg-red-700 text-white font-bold py-4 2xl:py-5 rounded-xl shadow-lg hover:shadow-vermilion/30 transition-all flex items-center justify-center gap-2 font-jpSerif text-sm 2xl:text-base">
+                    <i class="fas fa-paper-plane"></i> SEND MESSAGE (送信する)
+                </button>
+            </form>
+        </div>
+
+        <div class="flex justify-center gap-6 2xl:gap-8 mt-12 2xl:mt-16 reveal-on-scroll">
+            <a href="https://github.com/Faresaymann" target="_blank" class="w-12 h-12 2xl:w-16 2xl:h-16 rounded-2xl bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-800 text-slateInk dark:text-white hover:text-vermilion hover:scale-110 flex items-center justify-center text-xl 2xl:text-2xl shadow-md transition-all">
+                <i class="fab fa-github"></i>
+            </a>
+
+            <a href="https://linkedin.com/in/faress-ayman" target="_blank" class="w-12 h-12 2xl:w-16 2xl:h-16 rounded-2xl bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-800 text-blue-600 hover:scale-110 flex items-center justify-center text-xl 2xl:text-2xl shadow-md transition-all">
+                <i class="fab fa-linkedin"></i>
+            </a>
+
+            <a href="mailto:faressaymann@gmail.com" class="w-12 h-12 2xl:w-16 2xl:h-16 rounded-2xl bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-800 text-vermilion hover:scale-110 flex items-center justify-center text-xl 2xl:text-2xl shadow-md transition-all">
+                <i class="fas fa-envelope"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-darkNavy border-t border-slate-200 dark:border-slate-800 py-8 2xl:py-12 text-center text-xs 2xl:text-sm text-slate-500 dark:text-slate-400 font-jpSans">
+        <p>© 2026 Fares Ayman (ファレス・アイマン). All Rights Reserved.</p>
+        <p class="mt-1 text-[11px] 2xl:text-xs text-slate-400 dark:text-slate-500">Data Analyst @ Valeo | Ain Shams CS Graduate</p>
+    </footer>
+
+    <!-- External Script -->
+    <script src="script.js"></script>
+</body>
+</html>
