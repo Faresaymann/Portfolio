@@ -45,8 +45,8 @@ Built with a light/dark mode daylight Japanese aesthetic, floating canvas sakura
 
 1. **Clone the Repository:**
    ```bash
-   git clone [https://github.com/Faresaymann/Portfolio.git](https://github.com/Faresaymann/Portfolio.git)
-   cd Portfolio
+   git clone [https://github.com/Faresaymann/faresaymann.github.io.git](https://github.com/Faresaymann/faresaymann.github.io.git)
+   cd faresaymann.github.io
    ```
 
 2. **Open in Browser:**
