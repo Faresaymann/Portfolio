@@ -59,6 +59,30 @@
         }
     </script>
 </head>
+<!-- Custom Japanese Shrine Modal Alert -->
+<div id="jp-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
+    <div id="jp-modal-card" class="bright-card bg-white dark:bg-darkCard border-2 border-vermilion rounded-3xl p-8 max-w-md w-[90%] mx-auto text-center shadow-2xl transform scale-90 transition-all duration-300 relative overflow-hidden">
+        
+        <!-- Hanko Stamp Decoration -->
+        <div class="hanko-stamp text-xs mb-3 inline-block">送信完了</div>
+        
+        <!-- Torii Gate Icon Accent -->
+        <div class="w-16 h-16 rounded-2xl bg-vermilion/10 border border-vermilion/30 text-vermilion mx-auto flex items-center justify-center text-3xl mb-4 shadow-sm">
+            ⛩️
+        </div>
+
+        <h3 class="text-2xl font-black font-cinzel text-slateInk dark:text-white mb-1">MESSAGE TRANSMITTED</h3>
+        <p class="text-xs font-jpSerif text-vermilion font-bold mb-4">メッセージが正常に送信されました</p>
+
+        <p class="text-sm text-slate-600 dark:text-slate-300 font-jpSans leading-relaxed mb-6">
+            Arigatou gozaimasu! Your message has been transmitted to <strong>my inbox</strong>. Expect a swift reply.
+        </p>
+
+        <button onclick="closeJpModal()" class="w-full bg-vermilion hover:bg-red-700 text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-vermilion/30 transition-all font-jpSerif text-sm tracking-wider uppercase">
+            承知いたしました (Acknowledge)
+        </button>
+    </div>
+</div>
 <body class="bg-skyLight dark:bg-darkNavy bg-seigaiha text-slateInk dark:text-slate-200 antialiased selection:bg-vermilion selection:text-white relative">
 
     <!-- Canvas Floating Sakura Blossom Effect -->
@@ -173,7 +197,7 @@
             </div>
 
             <!-- RPG Character Stats Card -->
-            <div class="lg:col-span-5 2xl:col-span-5 reveal-on-scroll delay-2">
+            <div class="lg:col-span-5 2xl:col-span-5 reveal-on-scroll delay-1">
                 <div class="bright-card rounded-2xl p-6 md:p-8 2xl:p-10 relative border-2 border-vermilion/20">
                     <div class="absolute -top-4 right-8 bg-vermilion text-white font-jpSerif font-bold text-xs 2xl:text-sm px-4 py-1 rounded-md shadow-md uppercase tracking-wider">
                         STATUS • CLASS: DATA ANALYST & BACKEND ARCHITECT
@@ -247,7 +271,8 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 2xl:gap-12">
-            <div class="bright-card p-6 2xl:p-8 rounded-2xl border-2 border-slate-300 dark:border-slate-800 hover:border-vermilion transition-all reveal-on-scroll delay-1">
+            <!-- Left Card (Enters Last) -->
+            <div class="bright-card p-6 2xl:p-8 rounded-2xl border-2 border-slate-300 dark:border-slate-800 hover:border-vermilion transition-all reveal-on-scroll delay-3">
                 <div class="w-12 h-12 2xl:w-16 2xl:h-16 rounded-xl bg-amber-100 dark:bg-amber-900/30 text-amber-600 flex items-center justify-center font-bold text-xl 2xl:text-2xl mb-4">
                     <i class="fas fa-chart-pie"></i>
                 </div>
@@ -258,6 +283,7 @@
                 </p>
             </div>
 
+            <!-- Middle Card (Enters Second) -->
             <div class="bright-card p-6 2xl:p-8 rounded-2xl border-2 border-slate-300 dark:border-slate-800 hover:border-vermilion transition-all reveal-on-scroll delay-2">
                 <div class="w-12 h-12 2xl:w-16 2xl:h-16 rounded-xl bg-red-100 dark:bg-red-900/30 text-vermilion flex items-center justify-center font-bold text-xl 2xl:text-2xl mb-4">
                     <i class="fas fa-cubes"></i>
@@ -269,7 +295,8 @@
                 </p>
             </div>
 
-            <div class="bright-card p-6 2xl:p-8 rounded-2xl border-2 border-slate-300 dark:border-slate-800 hover:border-vermilion transition-all reveal-on-scroll delay-3">
+            <!-- Right Card (Enters First) -->
+            <div class="bright-card p-6 2xl:p-8 rounded-2xl border-2 border-slate-300 dark:border-slate-800 hover:border-vermilion transition-all reveal-on-scroll delay-1">
                 <div class="w-12 h-12 2xl:w-16 2xl:h-16 rounded-xl bg-green-100 dark:bg-green-900/30 text-bambooGreen flex items-center justify-center font-bold text-xl 2xl:text-2xl mb-4">
                     <i class="fab fa-react"></i>
                 </div>
@@ -292,8 +319,8 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 2xl:gap-12 items-stretch">
             
-            <!-- Category 1: Comprehensive Data Analysis & BI -->
-            <div class="bright-card rounded-2xl p-6 2xl:p-8 border border-slate-200 dark:border-slate-800 flex flex-col justify-between h-full reveal-on-scroll delay-1">
+            <!-- Category 1: Comprehensive Data Analysis & BI (Delay 3) -->
+            <div class="bright-card rounded-2xl p-6 2xl:p-8 border border-slate-200 dark:border-slate-800 flex flex-col justify-between h-full reveal-on-scroll delay-3">
                 <div>
                     <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-4 mb-6">
                         <div class="w-10 h-10 2xl:w-12 2xl:h-12 rounded-lg bg-amber-500 text-white flex items-center justify-center font-bold text-lg 2xl:text-xl">
@@ -326,7 +353,7 @@
                 </div>
             </div>
 
-            <!-- Category 2: Backend Architecture -->
+            <!-- Category 2: Backend Architecture (Delay 2) -->
             <div class="bright-card rounded-2xl p-6 2xl:p-8 border border-slate-200 dark:border-slate-800 flex flex-col justify-between h-full reveal-on-scroll delay-2">
                 <div>
                     <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-4 mb-6">
@@ -360,8 +387,8 @@
                 </div>
             </div>
 
-            <!-- Category 3: Frontend Web -->
-            <div class="bright-card rounded-2xl p-6 2xl:p-8 border border-slate-200 dark:border-slate-800 flex flex-col justify-between h-full reveal-on-scroll delay-3">
+            <!-- Category 3: Frontend Web (Delay 1) -->
+            <div class="bright-card rounded-2xl p-6 2xl:p-8 border border-slate-200 dark:border-slate-800 flex flex-col justify-between h-full reveal-on-scroll delay-1">
                 <div>
                     <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-4 mb-6">
                         <div class="w-10 h-10 2xl:w-12 2xl:h-12 rounded-lg bg-bambooGreen text-white flex items-center justify-center font-bold text-lg 2xl:text-xl">
@@ -422,8 +449,8 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-3 gap-8 2xl:gap-10">
             
-            <!-- 1. DDD Order Management -->
-            <div class="project-card bright-card rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col justify-between reveal-on-scroll delay-1" data-category="backend">
+            <!-- 1. DDD Order Management (Delay 3) -->
+            <div class="project-card bright-card rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col justify-between reveal-on-scroll delay-3" data-category="backend">
                 <div class="p-6 2xl:p-8">
                     <div class="flex justify-between items-start mb-4">
                         <span class="text-[10px] 2xl:text-xs font-bold font-jpSerif uppercase bg-red-100 dark:bg-red-950/50 text-vermilion px-2.5 py-1 rounded-md">
@@ -449,7 +476,7 @@
                 </div>
             </div>
 
-            <!-- 2. Valeo Product Data Automation & BI -->
+            <!-- 2. Valeo Product Data Automation & BI (Delay 2) -->
             <div class="project-card bright-card rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col justify-between reveal-on-scroll delay-2" data-category="data">
                 <div class="p-6 2xl:p-8">
                     <div class="flex justify-between items-start mb-4">
@@ -477,8 +504,8 @@
                 </div>
             </div>
 
-            <!-- 3. E-Commerce Backend API -->
-            <div class="project-card bright-card rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col justify-between reveal-on-scroll delay-3" data-category="backend">
+            <!-- 3. E-Commerce Backend API (Delay 1) -->
+            <div class="project-card bright-card rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col justify-between reveal-on-scroll delay-1" data-category="backend">
                 <div class="p-6 2xl:p-8">
                     <div class="flex justify-between items-start mb-4">
                         <span class="text-[10px] 2xl:text-xs font-bold font-jpSerif uppercase bg-red-100 dark:bg-red-950/50 text-vermilion px-2.5 py-1 rounded-md">
@@ -503,8 +530,8 @@
                 </div>
             </div>
 
-            <!-- 4. E-Learning Backend Platform -->
-            <div class="project-card bright-card rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col justify-between reveal-on-scroll delay-1" data-category="backend">
+            <!-- 4. E-Learning Backend Platform (Delay 3) -->
+            <div class="project-card bright-card rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col justify-between reveal-on-scroll delay-3" data-category="backend">
                 <div class="p-6 2xl:p-8">
                     <div class="flex justify-between items-start mb-4">
                         <span class="text-[10px] 2xl:text-xs font-bold font-jpSerif uppercase bg-red-100 dark:bg-red-950/50 text-vermilion px-2.5 py-1 rounded-md">
@@ -529,7 +556,7 @@
                 </div>
             </div>
 
-            <!-- 5. Angular Tic Tac Toe Game -->
+            <!-- 5. Angular Tic Tac Toe Game (Delay 2) -->
             <div class="project-card bright-card rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col justify-between reveal-on-scroll delay-2" data-category="frontend">
                 <div class="p-6 2xl:p-8">
                     <div class="flex justify-between items-start mb-4">
@@ -555,8 +582,8 @@
                 </div>
             </div>
 
-            <!-- 6. ITI Final Project -->
-            <div class="project-card bright-card rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col justify-between reveal-on-scroll delay-3" data-category="frontend">
+            <!-- 6. ITI Final Project (Delay 1) -->
+            <div class="project-card bright-card rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col justify-between reveal-on-scroll delay-1" data-category="frontend">
                 <div class="p-6 2xl:p-8">
                     <div class="flex justify-between items-start mb-4">
                         <span class="text-[10px] 2xl:text-xs font-bold font-jpSerif uppercase bg-green-100 dark:bg-green-950/50 text-bambooGreen px-2.5 py-1 rounded-md">
@@ -673,20 +700,21 @@
         </div>
 
         <div class="bright-card rounded-3xl p-8 md:p-12 2xl:p-16 border-2 border-vermilion/30 relative overflow-hidden shadow-2xl reveal-on-scroll">
-            <form onsubmit="handleFormSubmit(event)" class="relative z-10 space-y-6 2xl:space-y-8">
+            <!-- Formspree Live Email Integration Endpoint -->
+            <form id="contact-form" action="https://formspree.io/f/xqpajoqb" method="POST" class="relative z-10 space-y-6 2xl:space-y-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 2xl:gap-8">
                     <div>
                         <label class="block text-xs 2xl:text-sm font-bold font-jpSerif text-slate-700 dark:text-slate-300 uppercase mb-2">
                             <i class="fas fa-user text-vermilion mr-1"></i> Your Name / お名前
                         </label>
-                        <input type="text" required placeholder="Fares Ayman" class="w-full bg-slate-50 dark:bg-darkNavy border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 2xl:px-5 2xl:py-4 text-sm 2xl:text-base text-slateInk dark:text-white focus:outline-none focus:border-vermilion focus:ring-1 focus:ring-vermilion transition-all">
+                        <input type="text" name="name" required placeholder="Fares Ayman" class="w-full bg-slate-50 dark:bg-darkNavy border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 2xl:px-5 2xl:py-4 text-sm 2xl:text-base text-slateInk dark:text-white focus:outline-none focus:border-vermilion focus:ring-1 focus:ring-vermilion transition-all">
                     </div>
 
                     <div>
                         <label class="block text-xs 2xl:text-sm font-bold font-jpSerif text-slate-700 dark:text-slate-300 uppercase mb-2">
                             <i class="fas fa-envelope text-vermilion mr-1"></i> Email Address / メール
                         </label>
-                        <input type="email" required placeholder="faressaymann@gmail.com" class="w-full bg-slate-50 dark:bg-darkNavy border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 2xl:px-5 2xl:py-4 text-sm 2xl:text-base text-slateInk dark:text-white focus:outline-none focus:border-vermilion focus:ring-1 focus:ring-vermilion transition-all">
+                        <input type="email" name="_replyto" required placeholder="faressaymann@gmail.com" class="w-full bg-slate-50 dark:bg-darkNavy border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 2xl:px-5 2xl:py-4 text-sm 2xl:text-base text-slateInk dark:text-white focus:outline-none focus:border-vermilion focus:ring-1 focus:ring-vermilion transition-all">
                     </div>
                 </div>
 
@@ -694,11 +722,11 @@
                     <label class="block text-xs 2xl:text-sm font-bold font-jpSerif text-slate-700 dark:text-slate-300 uppercase mb-2">
                         <i class="fas fa-comment-alt text-vermilion mr-1"></i> Message Details / 本文
                     </label>
-                    <textarea rows="4" required placeholder="Write your message regarding Data Analysis, Power BI dashboards, Backend engineering, or opportunities..." class="w-full bg-slate-50 dark:bg-darkNavy border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 2xl:px-5 2xl:py-4 text-sm 2xl:text-base text-slateInk dark:text-white focus:outline-none focus:border-vermilion focus:ring-1 focus:ring-vermilion transition-all"></textarea>
+                    <textarea name="message" rows="4" required placeholder="Write your message regarding Data Analysis, Power BI dashboards, Backend engineering, or opportunities..." class="w-full bg-slate-50 dark:bg-darkNavy border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 2xl:px-5 2xl:py-4 text-sm 2xl:text-base text-slateInk dark:text-white focus:outline-none focus:border-vermilion focus:ring-1 focus:ring-vermilion transition-all"></textarea>
                 </div>
 
-                <button type="submit" class="w-full bg-vermilion hover:bg-red-700 text-white font-bold py-4 2xl:py-5 rounded-xl shadow-lg hover:shadow-vermilion/30 transition-all flex items-center justify-center gap-2 font-jpSerif text-sm 2xl:text-base">
-                    <i class="fas fa-paper-plane"></i> SEND MESSAGE (送信する)
+                <button id="submit-btn" type="submit" class="w-full bg-vermilion hover:bg-red-700 text-white font-bold py-4 2xl:py-5 rounded-xl shadow-lg hover:shadow-vermilion/30 transition-all flex items-center justify-center gap-2 font-jpSerif text-sm 2xl:text-base">
+                    <i class="fas fa-paper-plane"></i> <span id="submit-btn-text">SEND MESSAGE (送信する)</span>
                 </button>
             </form>
         </div>
