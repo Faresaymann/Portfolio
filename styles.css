@@ -111,3 +111,13 @@ body {
     animation-play-state: paused;
     height: 4px;
 }
+
+/* Custom Japanese Pop-up Modal Styling */
+#jp-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#jp-modal.active #jp-modal-card {
+    transform: scale(1);
+}
