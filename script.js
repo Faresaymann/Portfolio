@@ -81,11 +81,67 @@ function setupScrollObserver() {
     document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
 }
 
+// Modal Control Functions
+function openJpModal() {
+    const modal = document.getElementById('jp-modal');
+    if (modal) modal.classList.add('active');
+}
+
+function closeJpModal() {
+    const modal = document.getElementById('jp-modal');
+    if (modal) modal.classList.remove('active');
+}
+
+// Close modal when clicking outside the card
+document.addEventListener('click', (e) => {
+    const modal = document.getElementById('jp-modal');
+    if (e.target === modal) {
+        closeJpModal();
+    }
+});
+
+// Seamless Formspree AJAX Submission Handler with Styled Modal
+function setupFormspreeHandler() {
+    const form = document.getElementById('contact-form');
+    const btnText = document.getElementById('submit-btn-text');
+    
+    if (!form) return;
+
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        if (btnText) btnText.innerText = "TRANSMITTING... (送信中)";
+
+        const data = new FormData(form);
+        try {
+            const response = await fetch(form.action, {
+                method: form.method,
+                body: data,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                openJpModal(); // Trigger custom Japanese modal instead of browser alert
+                form.reset();
+            } else {
+                alert("Oops! There was a problem submitting your form. Please try again.");
+            }
+        } catch (error) {
+            alert("Network error occurred. Please check your connection and try again.");
+        } finally {
+            if (btnText) btnText.innerText = "SEND MESSAGE (送信する)";
+        }
+    });
+}
+
 // Initialize components on DOM Load
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     updateQuote();
     setupScrollObserver();
+    setupFormspreeHandler();
 });
 
 // Floating Sakura Canvas Animation
@@ -236,11 +292,4 @@ function filterProjects(category) {
             card.style.display = 'none';
         }
     });
-}
-
-// Form Submission Simulation
-function handleFormSubmit(e) {
-    e.preventDefault();
-    alert("送信完了！ Message transmitted successfully to Fares Ayman.");
-    e.target.reset();
 }
